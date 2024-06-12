@@ -7,7 +7,7 @@ st.write("Hello, World!")
 
 @st.cache_resource
 def init_connection():
-    return sqlite3.connect('hazmat.db')
+    return sqlite3.connect('Hazardous Materials Database.db')
 
 
 conn = init_connection()
