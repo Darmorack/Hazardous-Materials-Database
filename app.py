@@ -12,4 +12,6 @@ def init_connection():
 
 conn = init_connection()
 
+st.write('Database Connected!')
+
 page = st.sidebar.selectbox('Page', ('Search', 'A', 'B', 'C'))
