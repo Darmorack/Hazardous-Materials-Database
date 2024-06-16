@@ -53,6 +53,17 @@ if table_choice == "Item":
         carcinogen_threshold = st.text_input("Carcinogen Threshold")
         non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
 
+if table_choice == "Action":
+    with st.expander("Action Attributes"):
+        action_id = st.text_input("Action ID")
+        item_id = st.text_input("Item ID")
+        person = st.text_input("Person")
+        due_date = st.text_input("Due Date")
+        status = st.text_input("Status")
+        completion_date = st.text_input("Completion Date")
+        notes = st.text_input("Notes")
+
+
 
 
 # if table_choice == "Item" and not st.session_state["item_submitted"]:
