@@ -2,7 +2,6 @@ import streamlit as st
 import sqlite3
 import helpers.sidebar
 
-
 st.set_page_config(
     page_title="Hazardous Materials Database",
     page_icon="🔄",
