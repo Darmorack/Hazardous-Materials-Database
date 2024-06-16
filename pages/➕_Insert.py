@@ -18,6 +18,15 @@ def init_connection():
 
 conn = init_connection()
 
-st.write("Insert a record into the database")
+table_options = ["Select an Option", "Item", "Action"]
+table_choice = st.selectbox("Which table would you like to insert into?", table_options)
 
-user_input = st.text_input("Enter some text")
+if table_choice == "Item":
+    item_id = st.text_input("Enter Item's ID")
+    references = st.text_input("Enter References")
+    potential_for_exposure = st.text_input("Enter Potential for Exposure")
+    controls_mitigations = st.text_input("Enter Controls/Mitigations")
+    hazard_tracking_system_references = st.text_input("Enter Hazard/Hazard Tracking System References")
+    notes = st.text_input("Enter Notes")
+    quantity = st.text_input("Enter Quantity")
+    category = st.text_input("Enter Category")

@@ -1,6 +1,5 @@
 import streamlit as st
 
-
 def show() -> None:
     with st.sidebar:
         st.markdown(f"""
