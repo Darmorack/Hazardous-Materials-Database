@@ -53,6 +53,10 @@ if table_choice == "Item":
         carcinogen_threshold = st.text_input("Carcinogen Threshold")
         non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
 
+    if st.button('Insert Item', key='submit_item'):
+        # TODO SQL query here
+        st.write("Successfully inserted a new item")
+
 if table_choice == "Action":
     with st.expander("Action Attributes"):
         action_id = st.text_input("Action ID")
@@ -62,6 +66,10 @@ if table_choice == "Action":
         status = st.text_input("Status")
         completion_date = st.text_input("Completion Date")
         notes = st.text_input("Notes")
+
+    if st.button('Insert Action', key='submit_action'):
+        # TODO SQL query here
+        st.write("Successfully inserted a new action")
 
 
 
