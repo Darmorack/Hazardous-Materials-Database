@@ -18,13 +18,6 @@ def init_connection():
 
 conn = init_connection()
 
-# Initialize the session state
-if "item_submitted" not in st.session_state:
-    st.session_state["item_submitted"] = False
-    st.session_state["subsystem_submitted"] = False
-    st.session_state["item_data"] = {}
-    st.session_state["subsystem_data"] = {}
-
 table_options = ["Select an Option", "Item", "Action"]
 table_choice = st.selectbox("Which table would you like to insert into?", table_options)
 
@@ -73,6 +66,13 @@ if table_choice == "Action":
 
 
 
+
+# Initialize the session state
+# if "item_submitted" not in st.session_state:
+#     st.session_state["item_submitted"] = False
+#     st.session_state["subsystem_submitted"] = False
+#     st.session_state["item_data"] = {}
+#     st.session_state["subsystem_data"] = {}
 
 # if table_choice == "Item" and not st.session_state["item_submitted"]:
 #     item_id = st.text_input("Enter Item's ID", value=st.session_state["item_data"].get("item_id", ""))

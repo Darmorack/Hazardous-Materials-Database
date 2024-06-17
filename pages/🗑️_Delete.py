@@ -18,7 +18,25 @@ def init_connection():
 
 conn = init_connection()
 
-st.write("Delete a record from the database")
+table_options = ["Select an Option", "Item", "Action"]
+table_choice = st.selectbox("Which table would you like to delete from?", table_options)
 
-user_input = st.text_input("Enter some text")
+# TODO: LOCK USER CHOICE
+
+if table_choice == "Item":
+    with st.expander("Item Attributes"):
+        item_id = st.text_input("Item ID")
+        item_name = st.text_input("Item Name")
+        if st.button('Confirm', key='delete_action'):
+            # TODO SQL query here
+            st.write("Successfully deleted an item")
+
+if table_choice == "Action":
+    with st.expander("Action Attributes"):
+        action_id = st.text_input("Action ID")
+        item_id = st.text_input("Item ID")
+        if st.button('Confirm', key='delete_action'):
+            # TODO SQL query here
+            st.write("Successfully deleted an action")
+
 
