@@ -18,7 +18,6 @@ def init_connection():
 
 conn = init_connection()
 
-st.write("Update records in the database")
-
-user_input = st.text_input("Enter some text")
+table_options = ["Select an Option", "Item", "Action"]
+table_choice = st.selectbox("Which table would you like to update?", table_options)
 
