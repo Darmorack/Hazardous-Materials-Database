@@ -2,6 +2,7 @@
 ```sqlite
 INSERT INTO Item ('ItemID', 'Item Name', 'Quantity', 'Category', 'Hazard/Hazard Tracking System References', 'Potential For Exposure', 'Controls/Mitigations', 'References', 'Notes')
 VALUES (item_id, item_name, quantity, category, hazard_tracking_system_references, potential_for_exposure, controls_mitigations, references, notes
+```
 
 # Actions
 ```sqlite
