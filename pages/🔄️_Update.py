@@ -11,12 +11,8 @@ st.set_page_config(
 helpers.sidebar.show()
 
 
-@st.cache_resource
-def init_connection():
-    return sqlite3.connect('Hazardous Materials Database.db')
-
-
-conn = init_connection()
+conn = sqlite3.connect('Hazardous Materials Database.db')
+cur = conn.cursor()
 
 table_options = ["Select an Option", "Item", "Action"]
 table_choice = st.selectbox("Which table would you like to update?", table_options)
