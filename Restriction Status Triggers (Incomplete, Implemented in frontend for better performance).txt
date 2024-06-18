@@ -1,0 +1,55 @@
+OR old."Non-Carcinogen Threshold" <> new."Non-Carcinogen Threshold"
+
+
+
+
+
+
+CASE
+	WHEN old."Carcinogen Threshold" <> new."Carcinogen Threshold" AND Substance.Name = "Hazardous Component".SubstanceName AND Substance.Carcinogenicity = "Carcinogen" AND Substance.Restriction = "Restricted" AND "Hazardous Component"."Weight Percentage" >= new."Carcinogen Theshold"
+	THEN "Over Restricted"
+	
+	WHEN old."Carcinogen Threshold" <> new."Carcinogen Threshold" AND Substance.Name = "Hazardous Component".SubstanceName AND Substance.Carcinogenicity = "Carcinogen" AND Substance.Restriction = "Restricted" AND "Hazardous Component"."Weight Percentage" < new."Carcinogen Theshold"
+	THEN "Under Restricted"
+
+
+
+CREATE TRIGGER ResStatusResUpd AFTER UPDATE ON Restriction
+BEGIN
+UPDATE "Hazardous Component"
+SET "Restriction Status" = 
+WHERE "Hazardous Component".SubstanceName = HazMatStatus.Name
+	
+END;
+END;
+	
+
+
+WHEN old."Carcinogen Threshold" <> new."Carcinogen Threshold" OR old."Non-Carcinogen Threshold" <> new."Non-Carcinogen Threshold"
+
+
+
+
+CREATE VIEW HazMatAll AS
+SELECT "Hazardous Component".ItemID, Substance.Name, Substance."CAS Numbers", Substance.Carcinogenicity, Restriction.RestrictionType, Restriction."Carcinogen Threshold", Restriction."Non-Carcinogen Threshold", "Hazardous Component"."Weight Percentage", "Hazardous Component"."Restriction Status"
+FROM "Hazardous Component", Substance, Restriction
+WHERE Substance.Restriction = Restriction.RestrictionType, "Hazardous Component".SubstanceName = Substance.Name
+ORDER BY Substance.Name
+
+
+SELECT
+	"Hazardous Component".ItemID
+	Substance.Name,
+	Substance.Carcinogenicity,
+	Substance.SubstanceRestriction AS "Restriction Type",
+	"Hazardous Component"."Weight Percentage",
+	Restriction."Carcinogen Threshold",
+	Restriction."Non-Carcinogen Threshold"
+	"Hazardous Component"."Restriction Status"
+FROM
+	"Hazardous Component"
+	LEFT JOIN Substance ON "Hazardous Component".SubstanceName = Substance.Name
+	LEFT JOIN Restriction ON Substance.Restriction = Restriction.RestrictionType
+
+	
+
