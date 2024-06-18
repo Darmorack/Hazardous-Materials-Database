@@ -42,7 +42,34 @@ if table_choice == "Item":
         non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
 
     if st.button('Insert Item', key='submit_item'):
-        # TODO SQL query here
+        cur.execute(
+            "INSERT INTO Item ('ItemID', 'Item Name', 'Quantity', 'Category', 'Hazard/Hazard Tracking System "
+            "References', 'Potential For Exposure', 'Controls/Mitigations', 'References', 'Notes') VALUES(?, ?, ?, ?, "
+            "?, ?, ?, ?, ?)",
+            (item_id, item_name, quantity, category, hazard_tracking_system_references, potential_for_exposure,
+             controls_mitigations, references, notes)
+        )
+        cur.execute(
+            "INSERT INTO Subsystem (Name) VALUES (?)",
+            (subsystem_name,)
+        )
+        cur.execute(
+            "INSERT INTO Contains ('SubsystemName', 'ItemID') VALUES (?, ?)",
+            (subsystem_name, item_id)
+        )
+        cur.execute(
+            "INSERT INTO Restriction ('RestrictionType', 'Carcinogen Threshold', 'Non-Carcinogen Threshold') VALUES ("
+            "?, ?, ?)",
+            (restriction_name, carcinogen_threshold, non_carcinogen_threshold)
+        )
+        cur.execute(
+            "INSERT INTO Substance ('Name', 'CAS Numbers', 'Restriction', 'Carcinogenicity') VALUES (?, ?, ?, ?)",
+            (substance_name, casnumbers, restriction_name, carcinogenicity)
+        )
+        cur.execute(
+            "INSERT INTO 'Hazardous Component' ('ItemID', 'SubstanceName', 'Weight Percentage') VALUES (?, ?, ?)",
+            (item_id, substance_name, weight_percentage)
+        )
         conn.commit()
         st.write("Successfully inserted a new item")
 
@@ -57,7 +84,11 @@ if table_choice == "Action":
         notes = st.text_input("Notes")
 
     if st.button('Insert Action', key='submit_action'):
-        # TODO SQL query here
+        cur.execute(
+            "INSERT INTO Actions ('ActionID', 'Person', 'Status', 'Due Date', 'Completion Date', 'Notes', 'ItemID') "
+            "VALUES(?, ?, ?, ?, ?, ?, ?)",
+            (action_id, person, status, due_date, completion_date, notes, item_id)
+        )
         conn.commit()
         st.write("Successfully inserted a new action")
 
