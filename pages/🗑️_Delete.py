@@ -30,7 +30,7 @@ if table_choice == "Item":
     with st.expander("Item Attributes"):
         item_id = st.text_input("Item ID")
     if st.button('Confirm', key='delete_action'):
-        cur.execute("DELETE FROM Items WHERE ItemID = ? AND ItemID = ?", item_id)
+        cur.execute("DELETE FROM Item WHERE ItemID = ?", (item_id,))
         conn.commit()
         st.write("Successfully deleted an item")
 
