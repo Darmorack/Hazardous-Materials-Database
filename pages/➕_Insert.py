@@ -43,31 +43,31 @@ if table_choice == "Item":
 
     if st.button('Insert Item', key='submit_item'):
         cur.execute(
-            "INSERT INTO Item ('ItemID', 'Item Name', 'Quantity', 'Category', 'Hazard/Hazard Tracking System "
+            "INSERT OR IGNORE INTO Item ('ItemID', 'Item Name', 'Quantity', 'Category', 'Hazard/Hazard Tracking System "
             "References', 'Potential For Exposure', 'Controls/Mitigations', 'References', 'Notes') VALUES(?, ?, ?, ?, "
             "?, ?, ?, ?, ?)",
             (item_id, item_name, quantity, category, hazard_tracking_system_references, potential_for_exposure,
              controls_mitigations, references, notes)
         )
         cur.execute(
-            "INSERT INTO Subsystem (Name) VALUES (?)",
+            "INSERT OR IGNORE INTO Subsystem (Name) VALUES (?)",
             (subsystem_name,)
         )
         cur.execute(
-            "INSERT INTO Contains ('SubsystemName', 'ItemID') VALUES (?, ?)",
+            "INSERT OR IGNORE INTO Contains ('SubsystemName', 'ItemID') VALUES (?, ?)",
             (subsystem_name, item_id)
         )
         cur.execute(
-            "INSERT INTO Restriction ('RestrictionType', 'Carcinogen Threshold', 'Non-Carcinogen Threshold') VALUES ("
+            "INSERT OR IGNORE INTO Restriction ('RestrictionType', 'Carcinogen Threshold', 'Non-Carcinogen Threshold') VALUES ("
             "?, ?, ?)",
             (restriction_name, carcinogen_threshold, non_carcinogen_threshold)
         )
         cur.execute(
-            "INSERT INTO Substance ('Name', 'CAS Numbers', 'Restriction', 'Carcinogenicity') VALUES (?, ?, ?, ?)",
+            "INSERT OR IGNORE INTO Substance ('Name', 'CAS Numbers', 'Restriction', 'Carcinogenicity') VALUES (?, ?, ?, ?)",
             (substance_name, casnumbers, restriction_name, carcinogenicity)
         )
         cur.execute(
-            "INSERT INTO 'Hazardous Component' ('ItemID', 'SubstanceName', 'Weight Percentage') VALUES (?, ?, ?)",
+            "INSERT OR IGNORE INTO 'Hazardous Component' ('ItemID', 'SubstanceName', 'Weight Percentage') VALUES (?, ?, ?)",
             (item_id, substance_name, weight_percentage)
         )
         conn.commit()
@@ -85,7 +85,7 @@ if table_choice == "Action":
 
     if st.button('Insert Action', key='submit_action'):
         cur.execute(
-            "INSERT INTO Actions ('ActionID', 'Person', 'Status', 'Due Date', 'Completion Date', 'Notes', 'ItemID') "
+            "INSERT OR IGNORE INTO Actions ('ActionID', 'Person', 'Status', 'Due Date', 'Completion Date', 'Notes', 'ItemID') "
             "VALUES(?, ?, ?, ?, ?, ?, ?)",
             (action_id, person, status, due_date, completion_date, notes, item_id)
         )
