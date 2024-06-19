@@ -91,4 +91,3 @@ if table_choice == "Action":
         )
         conn.commit()
         st.write("Successfully inserted a new action")
-

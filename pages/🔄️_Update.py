@@ -10,7 +10,6 @@ st.set_page_config(
 
 helpers.sidebar.show()
 
-
 conn = sqlite3.connect('Hazardous Materials Database.db')
 cur = conn.cursor()
 
@@ -18,70 +17,92 @@ table_options = ["Select an Option", "Item", "Action", "Substance", "Restriction
 table_choice = st.selectbox("Which table would you like to update?", table_options)
 
 if table_choice == "Action":
-    person = ""
-    status = ""
-    completion_date = ""
-    notes = ""
-
     with st.expander("Search for an Action"):
         action_id = st.text_input("Action ID")
         item_id = st.text_input("Item ID")
         if st.button('Search', key='action_search'):
-            result = cur.execute(
+            st.session_state['completion_date'], st.session_state['notes'], st.session_state['status'], \
+                st.session_state['person'] = cur.execute(
                 'SELECT "Completion Date",  "Notes", "Status", "Person" FROM Actions where ActionID = ? AND ItemID = ?',
                 (action_id, item_id)).fetchone()
-            completion_date = result[0]
-            notes = result[1]
-            status = result[2]
-            person = result[3]
             st.write("Success!")
-    with st.expander("Action Attributes"):
-        person_input = st.text_input("Person", person)
-        status_input = st.text_input("Status", status)
-        completion_date_input = st.text_input("Completion Date", completion_date)
-        notes_input = st.text_input("Notes", notes)
-    if st.button('Update Action', key='submit_action'):
-        st.write("Success!")
 
+    with st.form(key='my_form'):
+        with st.expander("Action Attributes"):
+            completion_date = st.text_input("Completion Date", value=st.session_state.get('completion_date', ''),
+                                            key='completion_date')
+            notes = st.text_input("Notes", value=st.session_state.get('notes', ''), key='notes')
+            status = st.text_input("Status", value=st.session_state.get('status', ''), key='status')
+            person = st.text_input("Person", value=st.session_state.get('person', ''), key='person')
+        if st.form_submit_button('Update Action'):
+            cur.execute(
+                "UPDATE Actions SET 'Completion Date' = ?, 'Notes' = ?, 'Status' = ?, 'Person' = ? WHERE ActionID = ? "
+                "AND ItemID = ?", (completion_date, notes, status, person, action_id, item_id))
+            conn.commit()
+            st.write("Success!")
 
 if table_choice == "Item":
     with st.expander("Search for an Item"):
         item_id = st.text_input("Item ID")
         if st.button('Search', key='item_search'):
+            st.session_state['notes'], st.session_state['controls_mitigations'], st.session_state[
+                'quantity'] = cur.execute(
+                'SELECT "Notes", "Controls/Mitigations", "Quantity" FROM Item WHERE ItemID = ?', (item_id,)).fetchone()
             st.write("Success!")
-        test = "hello"
-    with st.expander("Item Attributes"):
-        item_name = st.text_input("Enter Item's Name", test)
-        references = st.text_input("Enter References")
-        potential_for_exposure = st.text_input("Enter Potential for Exposure")
-        controls_mitigations = st.text_input("Enter Controls/Mitigations")
-        hazard_tracking_system_references = st.text_input("Enter Hazard/Hazard Tracking System References")
-        notes = st.text_input("Enter Notes")
-        quantity = st.text_input("Quantity")
-        category = st.text_input("Enter Category")
-    if st.button('Update Item', key='submit_item'):
-        st.write("Success!")
+
+    with st.form(key='item_form'):
+        with st.expander("Item Attributes"):
+            controls_mitigations = st.text_input("Enter Controls/Mitigations",
+                                                 value=st.session_state.get('controls_mitigations', ''),
+                                                 key='controls_mitigations')
+            notes = st.text_input("Enter Notes", value=st.session_state.get('notes', ''), key='notes')
+            quantity = st.number_input("Quantity", value=float(st.session_state.get('quantity', 0)), key='quantity',
+                                       step=1.0)
+        if st.form_submit_button('Update Item'):
+            cur.execute("UPDATE Item SET 'Notes' = ?, 'Controls/Mitigations' = ?, 'Quantity' = ? WHERE ItemID = ?",
+                        (notes, controls_mitigations, quantity, item_id))
+            conn.commit()
+            st.write("Success!")
 
 if table_choice == "Substance":
     with st.expander("Search for a Substance"):
         substance_name = st.text_input("Substance Name")
         if st.button('Search', key='substance_search'):
+            st.session_state['restriction_name'], st.session_state['cas_numbers'] = cur.execute(
+                'SELECT "Restriction","CAS Numbers" FROM Substance WHERE Name = ?', (substance_name,)).fetchone()
             st.write("Success!")
-    with st.expander("Substance Attributes"):
-        restriction = st.text_input("Restriction")
-        cas_numbers = st.text_input("CAS Numbers")
-        name = st.text_input("Name")
-    if st.button('Update Substance', key='submit_substance'):
-        st.write("Success!")
+
+    with st.form(key='substance_form'):
+        with st.expander("Substance Attributes"):
+            cas_numbers = st.text_input("CAS Numbers", value=st.session_state.get('cas_numbers', ''), key='cas_numbers')
+            restriction_name = st.text_input("Restriction", value=st.session_state.get('restriction_name', ''),
+                                             key='restriction_name')
+        if st.form_submit_button('Update Substance'):
+            cur.execute("Update Substance SET 'Restriction' = ?, 'CAS Numbers' = ? WHERE Name = ?",
+                        (restriction_name, cas_numbers, substance_name))
+            conn.commit()
+            st.write("Success!")
 
 if table_choice == "Restriction":
     with st.expander("Search for a Restriction"):
-        restriction_name = st.text_input("Restriction Name")
+        restriction_type = st.text_input("Restriction Type")
         if st.button('Search', key='restriction_search'):
+            st.session_state['carcinogen_threshold'], st.session_state['non_carcinogen_threshold'] = cur.execute(
+                'SELECT "Carcinogen Threshold",  "Non-Carcinogen Threshold" FROM Restriction WHERE RestrictionType = ?',
+                (restriction_type,)).fetchone()
             st.write("Success!")
-    with st.expander("Restriction Attributes"):
-        carcinogen_threshold = st.text_input("Carcinogen Threshold")
-        non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
-    if st.button('Update Restriction', key='submit_restriction'):
-        st.write("Success!")
 
+    with st.form(key='restriction_form'):
+        with st.expander("Restriction Attributes"):
+            carcinogen_threshold = st.text_input("Carcinogen Threshold",
+                                                 value=st.session_state.get('carcinogen_threshold', ''),
+                                                 key='carcinogen_threshold')
+            non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold",
+                                                     value=st.session_state.get('non_carcinogen_threshold', ''),
+                                                     key='non_carcinogen_threshold')
+        if st.form_submit_button('Update Restriction'):
+            cur.execute(
+                "UPDATE Restriction SET 'Carcinogen Threshold' = ?,  'Non-Carcinogen Threshold' = ? WHERE "
+                "RestrictionType = ?",(carcinogen_threshold, non_carcinogen_threshold, restriction_type))
+            conn.commit()
+            st.write("Success!")
