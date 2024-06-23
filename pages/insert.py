@@ -1,6 +1,7 @@
 import streamlit as st
+from streamlit import session_state as ss
+from modules.nav import MenuButtons
 import sqlite3
-import helpers.sidebar
 
 st.set_page_config(
     page_title="Hazardous Materials Database",
@@ -8,15 +9,22 @@ st.set_page_config(
     layout="wide"
 )
 
-helpers.sidebar.show()
+# If the user reloads or refreshes the page while still logged in,
+# go to the account page to restore the login status.
+if 'authentication_status' not in ss:
+    st.switch_page('./pages/account.py')
 
+MenuButtons()
+
+# Connect to the database.
 conn = sqlite3.connect('Hazardous Materials Database.db')
 cur = conn.cursor()
+
+st.title("Insert into the Database")
 
 table_options = ["Select an Option", "Item", "Action"]
 table_choice = st.selectbox("Which table would you like to insert into?", table_options)
 
-# TODO: LOCK USER CHOICE
 if table_choice == "Item":
     with st.expander("Item Attributes"):
         item_id = st.text_input("Enter Item's ID")

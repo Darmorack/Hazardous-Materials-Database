@@ -1,6 +1,7 @@
 import streamlit as st
+from streamlit import session_state as ss
+from modules.nav import MenuButtons
 import sqlite3
-import helpers.sidebar
 
 st.set_page_config(
     page_title="Hazardous Materials Database",
@@ -8,10 +9,20 @@ st.set_page_config(
     layout="wide"
 )
 
-helpers.sidebar.show()
+# If the user reloads or refreshes the page while still logged in,
+# go to the account page to restore the login status. Note reloading
+# the page changes the session id and previous state values are lost.
+# What we are doing is only to relogin the user.
+if 'authentication_status' not in ss:
+    st.switch_page('./pages/account.py')
 
+MenuButtons()
+
+# Connect to the database.
 conn = sqlite3.connect('Hazardous Materials Database.db')
 cur = conn.cursor()
+
+st.title("Update the Database")
 
 table_options = ["Select an Option", "Item", "Action", "Substance", "Restriction"]
 table_choice = st.selectbox("Which table would you like to update?", table_options)
