@@ -25,19 +25,22 @@ st.title("Delete from the Database")
 
 table_options = ["Select an Option", "Item", "Action"]
 table_choice = st.selectbox("Which table would you like to delete from?", table_options)
+cur.execute('SELECT ItemID FROM Item')
+items = [item[0] for item in cur.fetchall()]
+cur.execute('SELECT ActionID FROM Actions')
+actions = [action[0] for action in cur.fetchall()]
 
 if table_choice == "Item":
-    with st.expander("Item Attributes"):
-        item_id = st.text_input("Item ID")
+    item_id = st.selectbox("Select an item you want to delete", items)
+
     if st.button('Confirm', key='delete_action'):
         cur.execute("DELETE FROM Item WHERE ItemID = ?", (item_id,))
         conn.commit()
         st.write("Successfully deleted an item")
 
 if table_choice == "Action":
-    with st.expander("Action Attributes"):
-        action_id = st.text_input("Action ID")
-        item_id = st.text_input("Item ID")
+    action_id = st.selectbox("Select an action you want to delete", actions)
+    item_id = st.selectbox("Select an item you want to delete", items)
     if st.button('Confirm', key='delete_action'):
         cur.execute("DELETE FROM Actions WHERE ActionID = ? AND ItemID = ?", (action_id, item_id))
         conn.commit()
