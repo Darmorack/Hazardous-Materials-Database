@@ -29,26 +29,29 @@ if table_choice == "Items & Components Report":
     col_names = [description[0] for description in cur.description]
     df = pd.DataFrame(report, columns = col_names)
     st.dataframe(df)
+    st.write("Success!")
 
 if table_choice == "Full Report":
     report = cur.execute("SELECT * FROM FullReport").fetchall()
     col_names = [description[0] for description in cur.description]
     df = pd.DataFrame(report, columns = col_names)
     st.dataframe(df)
+    st.write("Success!")
 
 if table_choice == "Items & Hazards|HTS References Report":
     report = cur.execute("SELECT * FROM HazardReport").fetchall()
     col_names = [description[0] for description in cur.description]
     df = pd.DataFrame(report, columns = col_names)
     st.dataframe(df)
+    st.write("Success!")
 
 if table_choice == "Item-Action Report":
     st.write("Search for an Item:")
-    
+
     # Retrieve all users from the database
     cur.execute("SELECT ItemID FROM Item")
     items = [item[0] for item in cur.fetchall()]
-    
+
     selected_item = st.selectbox('Select an Item', items)
     report = cur.execute("SELECT * FROM ActionReport WHERE ItemID = ?", (selected_item,)).fetchall()
     col_names = [description[0] for description in cur.description]

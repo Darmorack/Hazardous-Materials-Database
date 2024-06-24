@@ -22,7 +22,7 @@ cur = conn.cursor()
 
 st.title("Insert into the Database")
 
-table_options = ["Select an Option", "Item", "Action"]
+table_options = ["Select an Option", "Item", "Action", "Hazardous Component", "Substance", "Restriction"]
 table_choice = st.selectbox("Which table would you like to insert into?", table_options)
 
 if table_choice == "Item":
@@ -38,16 +38,23 @@ if table_choice == "Item":
         category = st.text_input("Enter Category")
 
     with st.expander("Subsystem Attributes"):
-        subsystem_name = st.text_input("Subsystem Name")
-
-    with st.expander("Hazardous Component(s)"):
-        substance_name = st.text_input("Substance Name")
-        casnumbers = st.text_input("CAS Numbers")
-        carcinogenicity = st.text_input("Carcinogenicity")
-        weight_percentage = st.text_input("Weight Percentage")
-        restriction_name = st.text_input("Restriction Name")
-        carcinogen_threshold = st.text_input("Carcinogen Threshold")
-        non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
+        cur.execute("SELECT DISTINCT Name FROM Subsystem")
+        existing_subsystems = [row[0] for row in cur.fetchall()]
+        existing_subsystems.append("Add new")
+        selected_subsystem = st.selectbox("Select a subsystem", existing_subsystems)
+        if selected_subsystem == "Add new":
+            subsystem_name = st.text_input("Enter new Subsystem Name")
+        else:
+            subsystem_name = selected_subsystem
+    # DEPRECATED
+    # with st.expander("Hazardous Component(s)"):
+    #     substance_name = st.text_input("Substance Name")
+    #     casnumbers = st.text_input("CAS Numbers")
+    #     carcinogenicity = st.text_input("Carcinogenicity")
+    #     weight_percentage = st.text_input("Weight Percentage")
+    #     restriction_name = st.text_input("Restriction Name")
+    #     carcinogen_threshold = st.text_input("Carcinogen Threshold")
+    #     non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
 
     if st.button('Insert Item', key='submit_item'):
         cur.execute(
@@ -65,19 +72,20 @@ if table_choice == "Item":
             "INSERT OR IGNORE INTO Contains ('SubsystemName', 'ItemID') VALUES (?, ?)",
             (subsystem_name, item_id)
         )
-        cur.execute(
-            "INSERT OR IGNORE INTO Restriction ('RestrictionType', 'Carcinogen Threshold', 'Non-Carcinogen Threshold') VALUES ("
-            "?, ?, ?)",
-            (restriction_name, carcinogen_threshold, non_carcinogen_threshold)
-        )
-        cur.execute(
-            "INSERT OR IGNORE INTO Substance ('Name', 'CAS Numbers', 'Restriction', 'Carcinogenicity') VALUES (?, ?, ?, ?)",
-            (substance_name, casnumbers, restriction_name, carcinogenicity)
-        )
-        cur.execute(
-            "INSERT OR IGNORE INTO 'Hazardous Component' ('ItemID', 'SubstanceName', 'Weight Percentage') VALUES (?, ?, ?)",
-            (item_id, substance_name, weight_percentage)
-        )
+        # DEPRECATED
+        # cur.execute(
+        #     "INSERT OR IGNORE INTO Restriction ('RestrictionType', 'Carcinogen Threshold', 'Non-Carcinogen Threshold') VALUES ("
+        #     "?, ?, ?)",
+        #     (restriction_name, carcinogen_threshold, non_carcinogen_threshold)
+        # )
+        # cur.execute(
+        #     "INSERT OR IGNORE INTO Substance ('Name', 'CAS Numbers', 'Restriction', 'Carcinogenicity') VALUES (?, ?, ?, ?)",
+        #     (substance_name, casnumbers, restriction_name, carcinogenicity)
+        # )
+        # cur.execute(
+        #     "INSERT OR IGNORE INTO 'Hazardous Component' ('ItemID', 'SubstanceName', 'Weight Percentage') VALUES (?, ?, ?)",
+        #     (item_id, substance_name, weight_percentage)
+        # )
         conn.commit()
         st.write("Successfully inserted a new item")
 
@@ -99,3 +107,61 @@ if table_choice == "Action":
         )
         conn.commit()
         st.write("Successfully inserted a new action")
+
+if table_choice == "Hazardous Component":
+    with st.expander("Hazardous Component Attributes"):
+        cur.execute("SELECT DISTINCT ItemID FROM Item")
+        existing_item_ids = [row[0] for row in cur.fetchall()]
+        selected_item_id = st.selectbox("Select an item ID", existing_item_ids)
+        item_id = selected_item_id
+
+        cur.execute("SELECT DISTINCT SubstanceName FROM 'Hazardous Component'")
+        existing_substances = [row[0] for row in cur.fetchall()]
+        selected_substance = st.selectbox("Select a substance", existing_substances)
+        substance_name = selected_substance
+
+        weight_percentage = st.text_input("Weight Percentage")
+
+    if st.button('Insert Hazardous Component', key='submit_hazardous_component'):
+        cur.execute(
+            "INSERT OR IGNORE INTO 'Hazardous Component' ('ItemID', 'SubstanceName', 'Weight Percentage') VALUES (?, ?, ?)",
+            (item_id, substance_name, weight_percentage)
+        )
+        conn.commit()
+        st.write("Successfully inserted a new hazardous component")
+
+if table_choice == "Substance":
+    with st.expander("Substance Attributes"):
+        cur.execute("SELECT DISTINCT Restriction FROM Substance")
+        existing_restrictions = [row[0] for row in cur.fetchall()]
+        selected_restriction = st.selectbox("Select a restriction", existing_restrictions)
+        restriction = selected_restriction
+
+        cur.execute("SELECT DISTINCT Carcinogenicity FROM Substance")
+        existing_carcinogenicity = [row[0] for row in cur.fetchall()]
+        selected_carcinogenicity = st.selectbox("Select a Carcinogenicity", existing_carcinogenicity)
+        carcinogenicity = selected_carcinogenicity
+
+        substance_name = st.text_input("Substance Name")
+        casnumbers = st.text_input("CAS Numbers")
+
+    if st.button('Insert Substance', key='submit_substance'):
+        cur.execute(
+            "INSERT OR IGNORE INTO Substance ('Name', 'CAS Numbers', 'Restriction', 'Carcinogenicity') VALUES (?, ?, ?, ?)",
+            (substance_name, casnumbers, restriction, carcinogenicity)
+        )
+        conn.commit()
+        st.write("Successfully inserted a new substance")
+
+if table_choice == "Restriction":
+    restriction_type = st.text_input("Restriction Type")
+    carcinogen_threshold = st.text_input("Carcinogen Threshold")
+    non_carcinogen_threshold = st.text_input("Non-Carcinogen Threshold")
+
+    if st.button('Insert Restriction', key='submit_restriction'):
+        cur.execute(
+            "INSERT OR IGNORE INTO Restriction ('RestrictionType', 'Carcinogen Threshold', 'Non-Carcinogen Threshold') VALUES (?, ?, ?)",
+            (restriction_type, carcinogen_threshold, non_carcinogen_threshold)
+        )
+        conn.commit()
+        st.write("Successfully inserted a new restriction")
