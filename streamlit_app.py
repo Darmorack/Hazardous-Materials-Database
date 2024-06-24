@@ -22,4 +22,4 @@ st.header('Home')
 if ss.authentication_status:
     st.write('⚠️ Welcome to the Hazardous Materials Database!  ⚠️')
 else:
-    st.write('Please log in on login page.')
+    st.write('Please log in on the account page.')

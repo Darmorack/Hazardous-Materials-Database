@@ -10,9 +10,7 @@ st.set_page_config(
 )
 
 # If the user reloads or refreshes the page while still logged in,
-# go to the account page to restore the login status. Note reloading
-# the page changes the session id and previous state values are lost.
-# What we are doing is only to relogin the user.
+# go to the account page to restore the login status.
 if 'authentication_status' not in ss:
     st.switch_page('./pages/account.py')
 
