@@ -44,9 +44,13 @@ if table_choice == "Items & Hazards|HTS References Report":
 
 if table_choice == "Item-Action Report":
     st.write("Search for an Item:")
-    item_id = st.text_input("Item ID")
-    if st.button('Search', key='item_action_search'):
-        report = cur.execute("SELECT * FROM ActionReport WHERE ItemID = ?", (item_id,)).fetchall()
-        col_names = [description[0] for description in cur.description]
-        df = pd.DataFrame(report, columns = col_names)
-        st.dataframe(df)
+    
+    # Retrieve all users from the database
+    cur.execute("SELECT ItemID FROM Item")
+    items = [item[0] for item in cur.fetchall()]
+    
+    selected_item = st.selectbox('Select an Item', items)
+    report = cur.execute("SELECT * FROM ActionReport WHERE ItemID = ?", (selected_item,)).fetchall()
+    col_names = [description[0] for description in cur.description]
+    df = pd.DataFrame(report, columns = col_names)
+    st.dataframe(df)
