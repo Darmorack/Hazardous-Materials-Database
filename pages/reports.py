@@ -29,21 +29,18 @@ if table_choice == "Items & Components Report":
     col_names = [description[0] for description in cur.description]
     df = pd.DataFrame(report, columns = col_names)
     st.dataframe(df)
-    st.write("Success!")
 
 if table_choice == "Full Report":
     report = cur.execute("SELECT * FROM FullReport").fetchall()
     col_names = [description[0] for description in cur.description]
     df = pd.DataFrame(report, columns = col_names)
     st.dataframe(df)
-    st.write("Success!")
 
 if table_choice == "Items & Hazards|HTS References Report":
     report = cur.execute("SELECT * FROM HazardReport").fetchall()
     col_names = [description[0] for description in cur.description]
     df = pd.DataFrame(report, columns = col_names)
     st.dataframe(df)
-    st.write("Success!")
 
 if table_choice == "Item-Action Report":
     st.write("Search for an Item:")
