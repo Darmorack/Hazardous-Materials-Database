@@ -1,0 +1,27 @@
+Not Implemented:
+
+Automatic Restriciton Status (Should be implemented in front end):
+Hazardous Component Weight Percentage (WP) compared to Substance Restriction Carcinogen or Non-Carcinogen Threshold
+Over-Restricted - WP >= Restricted Threshold
+Under-Restricted - WP < Restricted Threshold
+Over-Prohibited - WP >= Prohibited Threshold
+Under-Prohibited - WP < Prohibited Theshold
+None
+N/A
+Should be updated on insertion of a Hazardous Component for that component (1), update of a Substance's Restriction level for all related Hazardous Components (2), and update of a threshold in Restriction for all Hazardous Components with Substances that have that Restriction (3)
+
+After Status is determined, it should update "Hazardous Component"."Restriction Status" for the relevant component
+
+
+
+Delete Action
+Item should be selected first, then it should only give the option for related actions
+
+
+
+Insert Item
+Allow insert of multiple Hazardous Components (also related Substances, Restrictions) and Actions when inserting an item as opposed to separate inserts
+
+
+
+Front end import of csv files

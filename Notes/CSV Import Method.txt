@@ -1,0 +1,24 @@
+Method to Import .csv files on Windows:
+1. Format csv file to structure of related table (make sure to remove column headers)
+(OPTIONAL) Move csv file to directory of DB - no need to specify filePath in step 4
+
+2. Download from https://www.sqlite.org/
+sqlite-tools-win-x64-3460000.zip
+extract to DB directory
+
+3.
+For Command Prompt
+cd to folder with .db file and sqlite3.exe
+Enter: sqlite3.exe "Hazardous Materials Database.db"
+
+For PowerShell
+cd to folder with .db file and sqlite3.exe
+Enter: ./sqlite3.exe '.\Hazardous Materials Database.db'
+
+
+4. (May need to enter ".mode csv" first, than shouldn't need --csv)
+Enter: .import filePath/fileName.csv tableName --csv
+
+*This should append to table, so to be safe, it'd be best to format all data for each table and only import once, then use front end for new changes
+
+**There are likely easier ways to import using various programs like SQLite Studio, but this is how example testing data was inserted
