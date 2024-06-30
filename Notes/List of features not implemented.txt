@@ -1,6 +1,6 @@
 Not Implemented:
 
-Automatic Restriciton Status (Should be implemented in front end):
+Automatic Restriction Status (Should be implemented in front end):
 Hazardous Component Weight Percentage (WP) compared to Substance Restriction Carcinogen or Non-Carcinogen Threshold
 Over-Restricted - WP >= Restricted Threshold
 Under-Restricted - WP < Restricted Threshold
